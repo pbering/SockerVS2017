@@ -15,7 +15,7 @@ param(
 
 function Sync 
 {
-    Get-ChildItem -Path $Path -Recurse -File | % {
+    Get-ChildItem -Path $Path -Recurse -File | ForEach-Object {
         $sourcePath = $_.FullName
         $targetPath = ("{0}\{1}" -f $Destination, $_.FullName.Replace("$Path\", ""))  
         $ignored = $false
@@ -36,7 +36,7 @@ function Sync
 
             if(Test-Path -Path $targetPath -PathType Leaf) 
             {
-                Compare-Object (Get-Item $sourcePath) (Get-Item $targetPath) -Property Name, Length, LastWriteTime | % {
+                Compare-Object (Get-Item $sourcePath) (Get-Item $targetPath) -Property Name, Length, LastWriteTime | ForEach-Object {
                     $triggerReason = "Different"
                 }
             }
@@ -59,21 +59,6 @@ function Sync
 
 $Destination = $Destination.TrimEnd("\")
 
-Write-Host ("{0}: Warming up..." -f [DateTime]::Now.ToString("HH:mm:ss:fff"))
-
-# Initial sync
-Sync | Out-Null
-
-# Warm up
-try 
-{
-    Invoke-WebRequest -Uri "http://localhost:80" -UseBasicParsing -TimeoutSec 20 -ErrorAction "SilentlyContinue" | Out-Null
-}
-catch 
-{
-    # OK    
-}
-
 Write-Host ("{0}: Watching '{1}' for changes, will copy to '{2}' while ignoring '{3}'." -f [DateTime]::Now.ToString("HH:mm:ss:fff"), $Path, $Destination, ($Ignore -join ", "))
 
 # Start            
@@ -81,5 +66,5 @@ while($true)
 {   
     Sync | Write-Host
 
-    Sleep -Milliseconds 500
+    Start-Sleep -Milliseconds 500
 }

@@ -4,7 +4,6 @@ services:
   webapp:
     ports:
       - "80"
-
 networks:
   default:
     external:

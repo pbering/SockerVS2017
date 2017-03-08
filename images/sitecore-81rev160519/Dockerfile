@@ -4,14 +4,14 @@ SHELL ["powershell", "-NoProfile", "-Command", "$ErrorActionPreference = 'Stop';
 
 ADD *.zip .
 
-RUN Expand-Archive -Path 'C:\Sitecore*.zip' -DestinationPath 'C:\Temp'; \
+RUN Expand-Archive -Path 'C:\Sitecore*.zip' -DestinationPath 'C:\\'; \
     Remove-Item 'C:\Sitecore*.zip' -Force;
 
-RUN robocopy ((Resolve-Path -Path "C:\Temp\Sitecore*").Path) 'C:\Sitecore' /E /NP /NFL /NDL /NJH /NJS; \
-    $global:LASTEXITCODE = $null;
+RUN Get-ChildItem -Path 'C:\Sitecore *' | % { Move-Item $_ -Destination 'C:\Sitecore' }; \
+    Remove-Item 'C:\Sitecore *' -Recurse -Force; \
+    Remove-Item 'C:\Sitecore\Databases' -Recurse -Force;
 
-RUN New-Item 'C:\empty' -ItemType Directory | Out-Null; \
-    robocopy 'C:\empty' 'C:\Sitecore\Temp' /purge /NP /NFL /NDL /NJH /NJS | Out-Null; \
-    $global:LASTEXITCODE = $null; \
-    Remove-Item 'C:\empty' -Force; \
-    Remove-Item 'C:\Sitecore\Temp' -Force;
+ADD Sitecore /Sitecore
+
+RUN Import-Module WebAdministration; \
+    Set-ItemProperty 'IIS:\Sites\Default Web Site\' -Name 'physicalPath' -Value 'C:\Sitecore\Website';

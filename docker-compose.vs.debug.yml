@@ -1,14 +1,28 @@
 version: '2.1'
 
 services:
+  db:
+    image: microsoft/mssql-server-windows-express
+    volumes:
+      - .\docker\databases:C:\Data 
+    environment:
+      ACCEPT_EULA: Y
+      sa_password: Docker+Sitecore!
+      attach_dbs: "[{'dbName':'Sitecore_Core','dbFiles':['C:\\\\Data\\\\Sitecore.Core.mdf','C:\\\\Data\\\\Sitecore.Core.ldf']},{'dbName':'Sitecore_Master','dbFiles':['C:\\\\Data\\\\Sitecore.Master.mdf', 'C:\\\\Data\\\\Sitecore.Master.ldf']},{'dbName': 'Sitecore_Web', 'dbFiles': ['C:\\\\Data\\\\Sitecore.Web.mdf','C:\\\\Data\\\\Sitecore.Web.ldf']},{'dbName':'Sitecore_Analytics','dbFiles':['C:\\\\Data\\\\Sitecore.Analytics.mdf','C:\\\\Data\\\\Sitecore.Analytics.ldf']}]"
+    mem_limit: 1024m
+
   webapp:
     image: webapp:dev
     build:
       args:
         source: ${DOCKER_BUILD_SOURCE}
+    entrypoint: powershell.exe 'C:\Sitecore\Scripts\Watch-Directory.ps1' -Path 'C:\inetpub\wwwroot' -Destination 'C:\Sitecore\Website'
     volumes:
       - .\src\WebApp:C:\inetpub\wwwroot
       - .\docker\serialization:C:\Sitecore\Data\serialization
       - ~\msvsmon:C:\msvsmon:ro
+    links: 
+      - db
+    mem_limit: 1024m
     labels:
       - "com.microsoft.visualstudio.targetoperatingsystem=windows"
