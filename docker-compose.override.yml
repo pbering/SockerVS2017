@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  webapp:
+    ports:
+      - "80"
+
+networks:
+  default:
+    external:
+      name: nat

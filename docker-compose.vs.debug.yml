@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+  webapp:
+    image: webapp:dev
+    build:
+      args:
+        source: ${DOCKER_BUILD_SOURCE}
+    volumes:
+      - .\src\WebApp:C:\inetpub\wwwroot
+      - .\docker\serialization:C:\Sitecore\Data\serialization
+      - ~\msvsmon:C:\msvsmon:ro
+    labels:
+      - "com.microsoft.visualstudio.targetoperatingsystem=windows"
