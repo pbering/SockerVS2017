@@ -4,7 +4,7 @@ services:
   db:
     image: microsoft/mssql-server-windows-express
     volumes:
-      - .\docker\databases:C:\Data 
+      - .\data\databases:C:\Data 
     environment:
       ACCEPT_EULA: Y
       sa_password: Docker+Sitecore!
@@ -19,7 +19,7 @@ services:
     entrypoint: powershell.exe 'C:\Sitecore\Scripts\Watch-Directory.ps1' -Path 'C:\inetpub\wwwroot' -Destination 'C:\Sitecore\Website'
     volumes:
       - .\src\WebApp:C:\inetpub\wwwroot
-      - .\docker\serialization:C:\Sitecore\Data\serialization
+      - .\data\serialization:C:\Sitecore\Data\serialization
       - ~\msvsmon:C:\msvsmon:ro
     links: 
       - db

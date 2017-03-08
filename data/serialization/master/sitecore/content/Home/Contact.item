@@ -20,7 +20,7 @@ content-length: 38
 ----version----
 language: en
 version: 1
-revision: ded95674-83a7-4897-b92a-5161550b4db7
+revision: 3821735e-2b28-4521-b23b-f1d58ae133ae
 
 ----field----
 field: {75577384-3C97-45DA-A847-81B00500E250}
@@ -29,6 +29,13 @@ key: title
 content-length: 7
 
 Contact
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 8
+
+Hi dude!
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
@@ -49,14 +56,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-ded95674-83a7-4897-b92a-5161550b4db7
+3821735e-2b28-4521-b23b-f1d58ae133ae
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 16
 
-20161114T053543Z
+20170308T212149Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
