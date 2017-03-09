@@ -1,4 +1,4 @@
-FROM sitecore:8.1.160519
+FROM sitecore:8.2.161221
 
 SHELL ["powershell", "-NoProfile", "-Command", "$ErrorActionPreference = 'Stop';"] 
 

@@ -1,18 +1,18 @@
 # Socker = Sitecore :heart: Docker (now with Visual Studio 2017)
 
->This is the continuation of [https://github.com/pbering/Socker](https://github.com/pbering/Socker) where the Docker integration in Visual Studio 2017 RTM is used, for a even smother developer workflow!
+>This is the continuation of [https://github.com/pbering/Socker](https://github.com/pbering/Socker) where the new Docker integration in Visual Studio 2017 is used instead.
 
 Is is now possible to run Sitecore completely in Docker natively, you don't have to mess around with databases, IIS or anything, you don't even have to have SQL Server or IIS installed on your machine.
 
-This repository shows how a solution running Sitecore is wired up for development with the following features:
+This repository shows how a solution could be wired up for development with the following features:
 
 - Databases is persisted between restarts
 - Serialized items are also persisted
 - Streaming log output
 
-Besides the Visual Studio 2017 out-of-the-box docker features:
+and also the Visual Studio 2017, out-of-the-box docker features like:
 
-- Remote debugging also with auto attaching running containers
+- Remote debugging, auto attaching to running containers with F5
 - Build, re-build, clear builds/stops/starts compose services (containers)
 
 ## Prerequisites
@@ -27,37 +27,38 @@ Besides the Visual Studio 2017 out-of-the-box docker features:
 hub.docker.com, quay.io or an internal one, so that images can be shared within your organization.
 Unfortunately it has to be **private** repositories due to Sitecore licensing terms so we can't share images in the community.
 
-### Using Sitecore v8.1 rev. 160519
+### Using Sitecore 8.2 rev. 161221
 
-1. Copy **Sitecore 8.1 rev. 160519.zip** into **"/images/sitecore-81rev160519"**
-1. Copy **license.xml** into **"/images/sitecore-81rev160519/Sitecore/Data"**
+1. Copy **Sitecore 8.2 rev. 161221.zip** into **"/images/sitecore-82rev161221"**
+1. Copy **license.xml** into **"/images/sitecore-82rev161221/Sitecore/Data"**
 1. Build image:
 
     ```text
-    docker build -t sitecore:8.1.160519 .\images\sitecore-81rev160519
+    docker build -t sitecore:8.2.161221 .\images\sitecore-82rev161221
     ```
 
-1. Copy database files from **Sitecore 8.1 rev. 160519.zip** into **"/data/databases"**
+1. Copy database files from **Sitecore 8.2 rev. 161221.zip** into **"/data/databases"**
 
 ## Daily usage
 
 1. Open solution...
 1. Make sure the "docker-compose" project is your startup project
 1. CTRL+F5 to run or set breakpoint and F5, Visual Studio will open your default browser automatically when the containers are ready
+1. Seriously, that's it!
 
-To stop everything again just use "Build -> Clear",
+To stop everything again just hit "Build -> Clear".
 
 ### Tips
 
 You can get the container id from the build output, in the examples below my container id is "b563056c227a", so I can just use "b56".
 
-You can attach to a container to watch output from Sitecore logs:
+Attach to a container to watch output from Sitecore logs:
 
 ```text
 docker exec b56 powershell C:/Sitecore/Scripts/Stream-Log.ps1
 ```
 
-or observe the output of the watcher script:
+...or observe the output of the watcher script:
 
 ```text
 docker attach b56
