@@ -1,4 +1,6 @@
-# Socker = Sitecore :heart: Docker
+# Socker = Sitecore :heart: Docker (now with Visual Studio 2017)
+
+>This is the continuation of [https://github.com/pbering/Socker](https://github.com/pbering/Socker) where the Docker integration in Visual Studio 2017 RTM is used, for a even smother developer workflow!
 
 Is is now possible to run Sitecore completely in Docker natively, you don't have to mess around with databases, IIS or anything, you don't even have to have SQL Server or IIS installed on your machine.
 
@@ -6,24 +8,18 @@ This repository shows how a solution running Sitecore is wired up for developmen
 
 - Databases is persisted between restarts
 - Serialized items are also persisted
-- Project output are automatically synced into running containers when changes are detected
-- Remote debugging
 - Streaming log output
-- Load balancing multiple Sitecore instances
+
+Besides the Visual Studio 2017 out-of-the-box docker features:
+
+- Remote debugging also with auto attaching running containers
+- Build, re-build, clear builds/stops/starts compose services (containers)
 
 ## Prerequisites
 
-### Using your local machine as host
-
 - Windows 10 Anniversary update with latest updates
-- Docker for Windows v1.13.0-rc2-beta31 or later (beta channel: [https://download.docker.com/win/beta/InstallDocker.msi](https://download.docker.com/win/beta/InstallDocker.msi))
-
-OR
-
-### Using a remote host (VM, bare iron, Azure, AWS etc.)
-
-- Docker v1.12.3 or later
-- Docker Compose v1.9.0 or later
+- Docker for Windows
+- Visual Studio 2017 RTM
 
 ## Preparations
 
@@ -34,71 +30,35 @@ Unfortunately it has to be **private** repositories due to Sitecore licensing te
 ### Using Sitecore v8.1 rev. 160519
 
 1. Copy **Sitecore 8.1 rev. 160519.zip** into **"/images/sitecore-81rev160519"**
-1. Build private images:
+1. Copy **license.xml** into **"/images/sitecore-81rev160519/Sitecore/Data"**
+1. Build image:
 
     ```text
-    docker build -t sitecore-iis .\images\sitecore-iis
     docker build -t sitecore:8.1.160519 .\images\sitecore-81rev160519
     ```
 
-1. Copy **license.xml** into **"/docker/web/Sitecore/Data"**
-1. Copy database files from **Sitecore 8.1 rev. 160519.zip** into **"/docker/databases"**
+1. Copy database files from **Sitecore 8.1 rev. 160519.zip** into **"/data/databases"**
 
 ## Daily usage
 
-### Start containers
+1. Open solution...
+1. Make sure the "docker-compose" project is your startup project
+1. CTRL+F5 to run or set breakpoint and F5, Visual Studio will open your default browser automatically when the containers are ready
+
+To stop everything again just use "Build -> Clear",
+
+### Tips
+
+You can get the container id from the build output, in the examples below my container id is "b563056c227a", so I can just use "b56".
+
+You can attach to a container to watch output from Sitecore logs:
 
 ```text
-docker-compose build
-docker-compose up
+docker exec b56 powershell C:/Sitecore/Scripts/Stream-Log.ps1
 ```
 
-If you do not care about the output from containers you can start in "detached" mode with `docker-compose up -d` and then use `docker-compose stop` or `docker-compose down` to remove everything.
-
-### Open solution
-
-- Build
-- Browse the IP of web container (IP is in the compose output or use `docker inspect`).
-- Add files, edit code, build - watcher script updates the running containers...
-  - Refresh browser, repeat...
-
-#### Logs
-
-You can attach to a container to watch output from Sitecore:
+or observe the output of the watcher script:
 
 ```text
-docker exec socker_web_1 powershell C:/Sitecore/Scripts/Stream-Log.ps1
+docker attach b56
 ```
-
-#### Debugging
-
-1. Open **Debug -> Attach to Process**
-1. Click **Find** and select container under **Auto detected**
-1. Select the **w3wp.exe** process
-1. Click **Attach**
-
-## More
-
-### Using another Sitecore version
-
-1. Copy **Sitecore 8.2 rev. 160729.zip** into **"/images/sitecore-82rev160729"**
-1. Build private image:
-
-    ```text
-    docker build -t sitecore:8.2.160729 .\images\sitecore-82rev160729
-    ```
-
-1. Change the version number in the **FROM** statement in **"/docker/web/Dockerfile"**
-1. Replace **"/src/WebApp/Web.config"** with the **Web.config** from **Sitecore 8.2 rev. 160729.zip**
-1. Update the package **Sitecore.Kernel.NoReferences** to 8.2.160729 int the WebApp project
-1. Copy database files from **Sitecore 8.2 rev. 160729.zip** into **"/docker/databases"**
-
-### Multiple Sitecore instances, load balanced
-
-If you want to try out an loadbalanced environment you should also build [http://traefik.io](http://traefik.io) for Windows with:
-
-```text
-docker build -t traefik:win .\images\traefik-win
-```
-
-You can then use `docker-compose --file .\docker-compose.scale.yml up` to start your containers.
