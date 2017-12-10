@@ -220,3 +220,4 @@ _Pvt_Extensions
 # Sitecore
 *.zip
 license.xml
+data/logs/*.txt
