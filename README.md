@@ -7,13 +7,13 @@ Is is now possible to run Sitecore completely in Docker natively, you don't have
 This repository shows how a solution could be wired up for development with the following features:
 
 - Databases is persisted between restarts
-- Serialized items persisted
-- Log files persisted
+- Serialization and log folders are mounted with volumes.
 
 and also the Visual Studio 2017, out-of-the-box docker features like:
 
 - Remote debugging, auto attaching to running containers with F5
 - Build, re-build, clear builds/stops/starts compose services (containers)
+- **New in Visual Studio 2017 15.5**: By default, Visual Studio will automatically pull, build, and run the necessary container images in the background when you open a project that has Docker support. You can disable this via the Automatically start containers in background setting in Visual Studio.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ and also the Visual Studio 2017, out-of-the-box docker features like:
 
 ## Preparations
 
->NOTE: Base images are build and consumed locally in this example, but in a real life senario you would also push to an remote private repository like
+>NOTE: Base images are build and consumed locally in this example, but in a real life scenario you would also push to an remote private repository like
 hub.docker.com, quay.io or an internal one, so that images can be shared within your organization.
 Unfortunately it has to be **private** repositories due to Sitecore licensing terms so we can't share images in the community.
 
@@ -44,6 +44,7 @@ Unfortunately it has to be **private** repositories due to Sitecore licensing te
 1. Open solution...
 1. Make sure the "docker-compose" project is your startup project
 1. CTRL+F5 to run or set breakpoint and F5, Visual Studio will open your default browser automatically when the containers are ready
-1. To continuously update changes from your web project output to the running container, you need to start the watcher script (you can get the container id from the build output or `docker container ps`): `docker exec <ID> powershell watch`
+1. To continuously update changes from your web project output to the running container, you need to start the watcher script (you can get the container id/name from the build output or `docker container ps`): `docker exec CONTAINER powershell watch`
+    >NOTE: Latest Docker tooling in Visual Studio overrides ENTRYPOINT (see [https://github.com/Microsoft/DockerTools/issues/9](https://github.com/Microsoft/DockerTools/issues/9)) so it is not possible to start the watcher script automatically when the container starts anymore.
 
 To stop everything again just hit "Build -> Clear".
