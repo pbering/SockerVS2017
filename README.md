@@ -17,9 +17,9 @@ and also the Visual Studio 2017, out-of-the-box docker features like:
 
 ## Prerequisites
 
-- Windows 10 Anniversary update with latest updates
+- Windows 10 Fall Creators Update
 - Docker for Windows
-- Visual Studio 2017 RTM
+- Visual Studio 2017 15.5 or later
 
 ## Preparations
 
