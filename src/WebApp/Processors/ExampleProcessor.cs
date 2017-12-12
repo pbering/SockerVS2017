@@ -1,5 +1,4 @@
 ﻿using System;
-using Sitecore;
 using Sitecore.Pipelines.HttpRequest;
 
 namespace WebApp.Processors
@@ -8,7 +7,7 @@ namespace WebApp.Processors
     {
         public override void Process(HttpRequestArgs args)
         {
-            if (Context.Site != null && Context.Site.Name.Equals("website", StringComparison.OrdinalIgnoreCase))
+            if (args.Context.Request.Path == "/")
             {
                 args.Context.Response.Write($"<b>HOST: {Environment.MachineName}</b>");
             }
