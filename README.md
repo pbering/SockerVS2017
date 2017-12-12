@@ -7,8 +7,8 @@ Is is now possible to run Sitecore completely in Docker natively, you don't have
 This repository shows how a solution could be wired up for development with the following features:
 
 - Databases is persisted between restarts
-- Serialized items are also persisted
-- Streaming log output
+- Serialized items persisted
+- Log files persisted
 
 and also the Visual Studio 2017, out-of-the-box docker features like:
 
@@ -44,22 +44,6 @@ Unfortunately it has to be **private** repositories due to Sitecore licensing te
 1. Open solution...
 1. Make sure the "docker-compose" project is your startup project
 1. CTRL+F5 to run or set breakpoint and F5, Visual Studio will open your default browser automatically when the containers are ready
-1. Seriously, that's it!
+1. To continuously update changes from your web project output to the running container, you need to start the watcher script (you can get the container id from the build output or `docker container ps`): `docker exec <ID> powershell watch`
 
 To stop everything again just hit "Build -> Clear".
-
-### Tips
-
-You can get the container id from the build output, in the examples below my container id is "b563056c227a", so I can just use "b56".
-
-Attach to a container to watch output from Sitecore logs:
-
-```text
-docker exec b56 powershell C:/Sitecore/Scripts/Stream-Log.ps1
-```
-
-...or observe the output of the watcher script:
-
-```text
-docker attach b56
-```
